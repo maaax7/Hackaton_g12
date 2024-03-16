@@ -403,3 +403,6 @@ ASALocalRun/
 
 # Local History for Visual Studio
 .localhistory/
+/Hackathon_g12.Api/ffmpeg.exe
+/Hackathon_g12.Api/ffplay.exe
+/Hackathon_g12.Api/ffprobe.exe

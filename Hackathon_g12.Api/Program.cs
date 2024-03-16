@@ -1,4 +1,7 @@
+using Hackathon_g12.Application.Infra.BlobAzure;
 using Hackathon_g12.Application.Services;
+using Hackathon_g12.Application.Services.Imagens;
+using Hackathon_g12.Application.Services.Storage;
 using Hackathon_g12.Application.Services.Videos;
 using Hackathon_g12.Domain.Intefaces.Repositories;
 using Hackathon_g12.Domain.Interfaces.Services;
@@ -20,9 +23,18 @@ builder.Services.AddScoped<IVideoRepository, VideoRepository>();
 builder.Services.AddScoped<IVideoService, VideoService>();
 builder.Services.AddScoped<IVideoApplicationService, VideoAplicationService>();
 builder.Services.AddScoped<IValidador, Validador>();
+builder.Services.AddScoped<IConteinerAzureConfigProvider, ConteinerAzureConfigProvider>();
+
+builder.Services.Configure<ConteinerAzureConfig>(builder.Configuration.GetSection("ConteinerAzure"));
+
+builder.Services.AddScoped<IStorageService, StorageService>();
+builder.Services.AddScoped<IImagemService, ImagemService>();
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
+{
+	options.SuppressModelStateInvalidFilter = true;
+}); ;
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

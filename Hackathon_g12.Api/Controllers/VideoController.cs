@@ -6,19 +6,18 @@ using System.Net;
 
 namespace Hackathon_g12.Api.Controllers
 {
-	[ApiController]
 	[Route("api/[controller]")]
 	public class VideoController : BaseController
 	{
 		private readonly IVideoApplicationService _videoApplication;
 
-		public VideoController(IVideoApplicationService videoApplication, IValidador validador): base(validador)
+		public VideoController(IVideoApplicationService videoApplication, IValidador validador) : base(validador)
 		{
 			_videoApplication = videoApplication;
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<VideoUploadViewModel>> Adicionar(List<VideoUploadViewModel> videosViewModel)
+		public async Task<ActionResult<VideoUploadViewModel>> Adicionar(VideoUploadViewModel videosViewModel)
 		{
 			if (!ModelState.IsValid) return ApiResponse(ModelState);
 			await _videoApplication.Adicionar(videosViewModel);
@@ -31,12 +30,14 @@ namespace Hackathon_g12.Api.Controllers
 		{
 			return ApiResponse(HttpStatusCode.OK, new object { });
 		}
-		
+
+
 		[HttpGet]
 		[Route("todos")]
-		public async Task<ActionResult<VideoUploadViewModel>> ObterTodos()
+		public async Task<ActionResult<List<VideosViewModel>>> ObterTodos()
 		{
-			return ApiResponse(HttpStatusCode.OK, new object { });
+			var videos = _videoApplication.ObterTodos();
+			return ApiResponse(HttpStatusCode.OK, videos);
 		}
 
 		[HttpGet]

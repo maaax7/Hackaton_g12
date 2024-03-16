@@ -24,6 +24,9 @@ namespace Hackathon_g12.Api.Controllers
 		{
 			if (OperacaoValida())
 			{
+
+				if (result == null) return NoContent();
+
 				return new ObjectResult(result)
 				{
 					StatusCode = Convert.ToInt32(statusCode),

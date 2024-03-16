@@ -48,6 +48,11 @@ namespace Hackathon_g12.Domain.Services
 			await _videoRepository.Remover(id);
 		}
 
+		public async Task<List<Video>> ObterTodos()
+		{
+			return await _videoRepository.ObterTodos();
+		}
+
 		public void Dispose()
 		{
 			_videoRepository?.Dispose();

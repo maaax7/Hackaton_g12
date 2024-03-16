@@ -5,6 +5,7 @@ namespace Hackathon_g12.Application.Services.Videos
 {
 	public interface IVideoApplicationService
 	{
-		Task Adicionar(List<VideoUploadViewModel> videosViewModel);
+		Task Adicionar(VideoUploadViewModel videoUploadViewModel);
+		Task<List<VideosViewModel>> ObterTodos();
 	}
 }

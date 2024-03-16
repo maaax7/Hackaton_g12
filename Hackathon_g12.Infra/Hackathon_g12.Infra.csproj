@@ -18,4 +18,8 @@
     <ProjectReference Include="..\Hackathon_g12.Domain\Hackathon_g12.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Scripts\" />
+  </ItemGroup>
+
 </Project>
