@@ -1,15 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Hackaton_g12.Models;
+using Hackathon_g12.Domain.Interfaces.Services;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace Hackaton_g12.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly List<UploadFile>? _files;
-    
+    private readonly HttpClient _httpClient;
+
+    public HomeController(IHttpClientFactory httpClientFactory)
+    {
+        _httpClient = httpClientFactory.CreateClient();
+        _httpClient.BaseAddress = new Uri("https://localhost:7260/");
+    }
+
     public IActionResult Index()
     {
-        return View(_files);
+        return View();
     }
 
     public IActionResult Privacy()
@@ -18,26 +27,52 @@ public class HomeController : Controller
     }
 
     [HttpPost]
-    public IActionResult UploadList(List<IFormFile> files)
+    public async Task<IActionResult> UploadList(List<IFormFile> files)
     {
         try
         {
-            List<UploadFile> list = new List<UploadFile>();
+
+            using var content = new MultipartFormDataContent();
 
             foreach (var file in files)
             {
-                string fileName = Path.GetFileName(file.FileName);
-                string description = $"File: {fileName}";
-                string status = "P"; 
+                var fileContent = new StreamContent(file.OpenReadStream());
+                fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                {
+                    Name = "files",
+                    FileName = file.FileName
+                };
 
-                list.Add(new UploadFile { Description = description, Status = status, ProcessDate = DateTime.Now });
+                content.Add(fileContent);
             }
 
-            return View(list);
+            var response = await _httpClient.PostAsync("/api/video/upload", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                List<UploadFile> list = new List<UploadFile>();
+
+                foreach (var file in files)
+                {
+                    string fileName = Path.GetFileName(file.FileName);
+                    string description = $"File: {fileName}";
+                    string status = "P";
+
+                    list.Add(new UploadFile { Description = description, Status = status, ProcessDate = DateTime.Now });
+                }
+
+                return View(list);
+            }
+            else
+            {
+                throw new Exception("Error");
+            }
+
+            
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"n error occurred while processing the upload: {ex.Message}");
+            Console.WriteLine($"An error occurred while processing the upload: {ex.Message}");
             return StatusCode(500, "An error occurred while processing the upload.");
         }
     }
