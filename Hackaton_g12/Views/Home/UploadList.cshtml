@@ -1,0 +1,27 @@
+﻿@model List<UploadFile>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Description</th>
+            <th scope="col">Status</th>
+            <th scope="col">Process Date</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var file in Model)
+        {
+            <tr>
+                <td>@file.Id</td>
+                <td>@file.Description</td>
+                <td>@file.Status</td>
+                <td>@file.ProcessDate</td>
+                <td>
+                    <a href="@Url.Action("Download", "Upload", new { id = file.Id })">Download</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
